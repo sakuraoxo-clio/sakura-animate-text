@@ -1,5 +1,7 @@
 # animate-text
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 > A Claude / agent **skill** by [**Sakura**](https://github.com/sakuraoxo-clio) ·
 > [Live demo](https://sakuraoxo-clio.github.io/sakura-animate-text/demo/) ·
 > MIT licensed · contributions welcome
