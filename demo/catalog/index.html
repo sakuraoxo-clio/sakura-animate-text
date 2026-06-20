@@ -6,9 +6,6 @@
 <title>喂鱼字体动效库 v2 · live catalog</title>
 <meta name="description" content="抖音 @喂鱼 · 让你用 AI 做视频时字体出现效果更好。60+ 种文字出现动效，持续更新，浏览器实时渲染，复制即用。" />
 <link rel="stylesheet" href="../../assets/library/jy-text-animations.css" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
 <style>
   /* 中文展示字体：Eva 宋体（family: SourceHanSerifSC EvaJian），按 unicode-range 拆两片：
      品牌片 10KB 默认即载；CJK 片 1.5MB 仅在输入自定义中文时才下载。CJK 规则在前、品牌规则在后，
@@ -22,6 +19,16 @@
     font-family: "Eva Ming"; font-weight: 700; font-display: swap;
     src: url(../../assets/library/fonts/eva-ming-brand.woff2) format("woff2");
     unicode-range: U+0020-00FF, U+5582, U+9C7C, U+5728, U+89C6, U+9891, U+5B57, U+4F53, U+52A8, U+6548;
+  }
+  /* 标题=思源宋体 Noto Serif SC（自托管子集，仅标题字）；英文展示=Space Grotesk（自托管 latin）。
+     全部自托管，不依赖 Google Fonts——国内打开也能看到正确字体。 */
+  @font-face {
+    font-family: "Noto Serif SC"; font-weight: 900; font-display: swap;
+    src: url(../../assets/library/fonts/noto-serif-sc-title.woff2) format("woff2");
+  }
+  @font-face {
+    font-family: "Space Grotesk"; font-weight: 700; font-display: swap;
+    src: url(../../assets/library/fonts/space-grotesk-latin.woff2) format("woff2");
   }
   :root {
     --bg: #0a0a0b;

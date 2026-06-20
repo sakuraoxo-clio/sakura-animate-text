@@ -16,10 +16,21 @@ OFL-1.1 full text: https://openfontlicense.org · Source Han Serif: https://gith
 > If you are not the rights-holder and want to ship Eva-Ming yourself, verify the derivative's
 > license terms for your use before redistributing.
 
+## Titles — 思源宋体 (Noto Serif SC)
+
+`noto-serif-sc-title.woff2` is a **web subset** of **Noto Serif SC** (= Adobe Source Han
+Serif SC, weight 900), containing only the title glyphs (`喂鱼字体动效库 v0-9`).
+Noto Serif SC © Adobe & Google, **SIL OFL 1.1**. https://fonts.google.com/noto/specimen/Noto+Serif+SC
+
 ## English — Space Grotesk
 
-Loaded at runtime from Google Fonts. **Space Grotesk** by Florian Karsten, **SIL OFL 1.1**.
+`space-grotesk-latin.woff2` is the **self-hosted Latin subset** (weight 700) of
+**Space Grotesk** by Florian Karsten, **SIL OFL 1.1**.
 https://fonts.google.com/specimen/Space+Grotesk
 
-The showcase stack is `"Space Grotesk", "Eva Ming", serif` — Latin renders in Space Grotesk,
-CJK falls through to Eva 宋体.
+## Delivery
+
+All fonts are **self-hosted** in this folder — the site loads **nothing from Google Fonts at
+runtime**, so the intended typefaces render even where Google Fonts is blocked or slow (e.g.
+mainland China). The showcase stack is `"Space Grotesk", "Eva Ming", serif` (Latin → Space
+Grotesk, CJK → Eva 宋体); titles use `"Noto Serif SC"`.

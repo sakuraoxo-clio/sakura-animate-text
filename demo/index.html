@@ -4,10 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>喂鱼字体动效库 v1 · live catalog</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet" />
 <style>
+  /* 标题=思源宋体 Noto Serif SC，自托管子集（仅标题字），不依赖 Google Fonts */
+  @font-face {
+    font-family: "Noto Serif SC"; font-weight: 900; font-display: swap;
+    src: url(../assets/library/fonts/noto-serif-sc-title.woff2) format("woff2");
+  }
   :root {
     --bg: #0a0a0b;
     --card: #141417;
