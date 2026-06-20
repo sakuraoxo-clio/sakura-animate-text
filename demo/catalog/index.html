@@ -254,7 +254,6 @@
   <script>
   (function () {
     "use strict";
-    const HOLD_MS = 1100;            // pause between replays of a one-shot effect
     const DEFAULT_TEXT = "字体动效";
     const grid = document.getElementById("grid");
     const previewInput = document.getElementById("preview");
@@ -297,28 +296,63 @@
     });
     grid.appendChild(frag);
 
-    // ---- per-card looping player (drives the replica library) ----
+    // ---- per-card showcase cycle (group-aware) ----
+    // Each group needs a different loop so text stays readable and the motion is the
+    // event you watch — never a card stuck on its final (often invisible) frame:
+    //   入场  enter → hold visible → repeat (replay starts at opacity 0, so it self-fades — no blank)
+    //   出场  pin visible → hold → perform the exit → short gap → repeat
+    //   循环  one infinite play, direction:alternate to kill the 0→1 hard-cut flicker
+    const ENTER_HOLD = 1500, EXIT_HOLD = 1500, EXIT_GAP = 240;
+    function finishedAll(h) {
+      return Promise.all(((h && h.animations) || []).map(function (a) { return a.finished.catch(function () {}); }));
+    }
+    function isNativeLoop(h) {
+      return ((h && h.animations) || []).some(function (a) {
+        try { return a.effect.getTiming().iterations === Infinity; } catch (_) { return false; }
+      });
+    }
     function playCard(card) {
-      let handle = null, timer = null, alive = true;
-      function once() {
-        if (!alive) return;
-        try { handle = JYTextAnimations.play(card.dataset.id, card._stage, previewText()); }
-        catch (e) { return; }
-        const anims = (handle && handle.animations) || [];
-        const native = anims.some(function (a) {
-          try { return a.effect.getTiming().iterations === Infinity; } catch (_) { return false; }
-        });
-        if (native) return;            // looping effects loop themselves via WAAPI
-        Promise.all(anims.map(function (a) { return a.finished.catch(function () {}); }))
-          .then(function () { if (alive) timer = setTimeout(once, HOLD_MS); });
-      }
-      once();
+      const id = card.dataset.id, group = card.dataset.group, stage = card._stage;
+      const s = { alive: true, handle: null, timer: null };
+      function wait(ms) { return new Promise(function (r) { s.timer = setTimeout(r, ms); }); }
+
+      (async function run() {
+        // desync from id so the whole wall doesn't pulse in unison
+        await wait(((parseInt(id.slice(-3), 10) || 0) % 9) * 90);
+        if (!s.alive) return;
+
+        if (group === "循环") {
+          try { s.handle = JYTextAnimations.play(id, stage, previewText(), { direction: "alternate" }); } catch (e) {}
+          return; // loops natively, forever
+        }
+
+        while (s.alive) {
+          try { s.handle = JYTextAnimations.play(id, stage, previewText()); } catch (e) { return; }
+          if (isNativeLoop(s.handle)) return; // safety net for any self-looping entrance
+
+          if (group === "出场") {
+            // freeze the exit on its first (fully visible) frame, hold, then let it exit
+            try { s.handle.pause(); } catch (_) {}
+            (s.handle.animations || []).forEach(function (a) { try { a.currentTime = 0; } catch (_) {} });
+            await wait(EXIT_HOLD); if (!s.alive) return;
+            try { s.handle.resume(); } catch (_) {}
+            await finishedAll(s.handle); if (!s.alive) return; // text has now exited
+            await wait(EXIT_GAP);
+          } else {
+            // 入场: let it enter, hold the visible result, then loop — the next play
+            // starts from opacity 0 and fades back in, so there is no blank flash
+            await finishedAll(s.handle); if (!s.alive) return; // text now visible
+            await wait(ENTER_HOLD); if (!s.alive) return;
+          }
+        }
+      })();
+
       return {
         stop: function () {
-          alive = false;
-          if (handle) { try { handle.stop(); } catch (_) {} }
-          if (timer) clearTimeout(timer);
-          card._stage.innerHTML = "";
+          s.alive = false;
+          if (s.timer) clearTimeout(s.timer);
+          if (s.handle) { try { s.handle.stop(); } catch (_) {} }
+          stage.innerHTML = "";
         }
       };
     }
@@ -353,14 +387,29 @@
       shownEl.textContent = shown;
     }
 
+    function selectGroup(group, scroll) {
+      activeGroup = group || "";
+      document.querySelectorAll(".tab").forEach(function (t) {
+        t.classList.toggle("active", t.dataset.group === activeGroup);
+      });
+      applyFilter();
+      if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     document.getElementById("tabs").addEventListener("click", function (e) {
       const btn = e.target.closest(".tab");
       if (!btn) return;
-      activeGroup = btn.dataset.group;
-      document.querySelectorAll(".tab").forEach(function (t) { t.classList.toggle("active", t === btn); });
-      applyFilter();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const g = btn.dataset.group;
+      location.hash = g ? encodeURIComponent(g) : "";   // deep-linkable category
+      selectGroup(g, true);
     });
+    // honour #入场 / #出场 / #循环 on load and on back/forward
+    const GROUPS = { "入场": 1, "出场": 1, "循环": 1 };
+    function syncFromHash() {
+      const h = decodeURIComponent((location.hash || "").replace(/^#/, ""));
+      selectGroup(GROUPS[h] ? h : "", false);
+    }
+    window.addEventListener("hashchange", syncFromHash);
+    syncFromHash();
 
     let searchTimer = null;
     searchInput.addEventListener("input", function () {
