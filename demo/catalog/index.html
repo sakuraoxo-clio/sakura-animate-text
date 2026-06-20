@@ -155,6 +155,7 @@
   .chip.g-in { color: #7df0c4; border-color: #1f3a30; background: #122019; }
   .chip.g-out { color: #ffb1c8; border-color: #3a1f2a; background: #20121a; }
   .chip.g-loop { color: var(--accent); border-color: #1f3540; background: #102029; }
+  .chip.alias { color: #d7b8ff; border-color: #322a40; background: #1a1622; }
   .copy {
     appearance: none; cursor: pointer; flex: none;
     border: 1px solid var(--card-edge); background: #1b1b20;
@@ -201,8 +202,8 @@
 
   <header>
     <h1>喂鱼字体动效库</h1>
-    <p>999 条可直接调用的文字动效。每一张卡片都在浏览器里实时循环渲染——不是视频、不是 GIF，就是你复制走之后跑出来的那一帧。</p>
-    <p>顶部改「预览文字」，整面墙会跟着换字；点卡片上的「复制」，拿到一段即贴即用的 <code>JYTextAnimations.play(...)</code> 代码。</p>
+    <p><b>65 个真正不同的文字动法</b>，从原库 999 个命名里去重得到——原库里 234 个名字其实是同一个淡入，这里每张卡是一种真实不重样的动法。每张都在浏览器里实时渲染，不是视频、不是 GIF。</p>
+    <p>顶部改「预览文字」，整面墙跟着换字；搜旧名字（如「描边粉笔」）会落到它实际所属的动法上；点「复制」拿到即贴即用的 <code>JYTextAnimations.play(...)</code> 代码。</p>
     <div class="cta-row">
       <a class="btn btn-primary" href="https://github.com/sakuraoxo-clio/sakura-animate-text" target="_blank" rel="noopener">
         <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -215,10 +216,10 @@
   <div class="controls">
     <div class="controls-inner">
       <div class="tabs" id="tabs">
-        <button class="tab active" data-group="">全部<span class="n" id="n-all">999</span></button>
-        <button class="tab" data-group="入场">入场<span class="n" id="n-in">512</span></button>
-        <button class="tab" data-group="出场">出场<span class="n" id="n-out">360</span></button>
-        <button class="tab" data-group="循环">循环<span class="n" id="n-loop">127</span></button>
+        <button class="tab active" data-group="">全部<span class="n" id="n-all">65</span></button>
+        <button class="tab" data-group="入场">入场<span class="n" id="n-in">28</span></button>
+        <button class="tab" data-group="出场">出场<span class="n" id="n-out">24</span></button>
+        <button class="tab" data-group="循环">循环<span class="n" id="n-loop">13</span></button>
       </div>
       <div class="field">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
@@ -229,16 +230,16 @@
         <input id="preview" type="text" value="字体动效" maxlength="12" />
       </div>
       <div class="spacer"></div>
-      <div class="count-badge">显示 <b id="shown">999</b> / 999</div>
+      <div class="count-badge">显示 <b id="shown">65</b> / 65 个动法 · 覆盖原库 999 命名</div>
     </div>
   </div>
 
   <div class="grid" id="grid"></div>
 
   <footer>
-    全部由 <code>assets/library/jy-text-animations.js</code> 驱动，单条入口 <code>JYTextAnimations.play(id, "#stage", "你的文字")</code>。
-    只有视口内的卡片会播放（IntersectionObserver 懒加载），所以 999 条同页也不卡。
-    动效是「干净复刻」实现，不含任何第三方剪辑软件的原始源码。
+    这里展示的是 <b>65 个去重后的真实动法</b>。原库 <code>jy-text-animations.js</code> 里挂着 999 个名字，但按关键帧去重后只有 52 套不同动法（其中 13 套另有循环变体）——234 个名字其实是同一个淡入。
+    每张卡列出它在原库里覆盖的「同款」数量，旧名字（如「描边粉笔」）仍可搜到。单条入口 <code>JYTextAnimations.play(id, "#stage", "你的文字")</code>。
+    只有视口内的卡片会播放（IntersectionObserver 懒加载）。动效是「干净复刻」实现，不含任何第三方剪辑软件的原始源码。
     <div class="sig">
       <div class="avatar">喂</div>
       <div class="who">
@@ -251,6 +252,7 @@
   </footer>
 
   <script src="../../assets/library/jy-text-animations.js"></script>
+  <script src="../../assets/library/presets.js"></script>
   <script>
   (function () {
     "use strict";
@@ -266,15 +268,18 @@
       return v || DEFAULT_TEXT;
     }
 
-    // ---- build all cards from the library's own registry ----
-    const all = JYTextAnimations.list();   // [{id,title,group,kind}, ...]
+    // ---- build cards from the de-duped preset list (65 real motions) ----
+    const all = (window.JYTA_PRESETS || []);   // [{id,name,kind,group,count,loop,aliases}, ...]
     const frag = document.createDocumentFragment();
     const cards = all.map(function (m) {
       const card = document.createElement("article");
       card.className = "card";
       card.dataset.id = m.id;
       card.dataset.group = m.group;
-      card.dataset.search = ((m.title || "") + " " + m.id + " " + (m.kind || "")).toLowerCase();
+      // search matches the honest name, the kind, the id, AND every original 剪映 name
+      // that collapsed into this motion — so e.g. searching "描边粉笔" still lands here
+      card.dataset.search = ((m.name || "") + " " + (m.aliases || []).join(" ") + " " + m.id + " " + (m.kind || "")).toLowerCase();
+      var aliasNote = (m.count > 1) ? '<span class="chip alias">原库 ×' + m.count + ' 同款</span>' : '';
       card.innerHTML =
         '<div class="stage"></div>' +
         '<div class="meta">' +
@@ -285,9 +290,10 @@
           '<div class="chips">' +
             '<span class="chip ' + (groupClass[m.group] || "") + '">' + m.group + '</span>' +
             (m.kind ? '<span class="chip">' + m.kind + '</span>' : '') +
+            aliasNote +
           '</div>' +
         '</div>';
-      card.querySelector(".name").textContent = m.title || "(未命名)";
+      card.querySelector(".name").textContent = m.name || "(未命名)";
       card.querySelector(".id").textContent = m.id;
       card._stage = card.querySelector(".stage");
       card._player = null;

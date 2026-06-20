@@ -33,16 +33,22 @@ python3 -m http.server 8000
   <img src="demo/media/catalog-grid.png" alt="All 20 effects" width="820">
 </p>
 
-## ▶ 喂鱼字体动效库 · 999 live catalog
+## ▶ 喂鱼字体动效库 · live catalog
 
 **→ [sakuraoxo-clio.github.io/sakura-animate-text/demo/catalog](https://sakuraoxo-clio.github.io/sakura-animate-text/demo/catalog/)**
 
-Alongside the 20 curated motion contracts, the repo ships a **999-effect drop-in library** —
-a clean-room reimplementation of common short-form text animations, every one callable by id.
-The [`demo/catalog/`](demo/catalog/) gallery renders all 999 live, grouped into
-**入场 (512) · 出场 (360) · 循环 (127)**, with category tabs, search, a live "preview text"
-box that retitles every card at once, and a per-card copy button. Only on-screen cards animate
-(IntersectionObserver), so 999 effects share one page without jank.
+Alongside the 20 curated motion contracts, the repo ships a **drop-in motion library**, a
+clean-room reimplementation of common short-form text animations, every motion callable by id.
+
+The source library carries 999 named functions — but those names are heavily padded: by
+keyframe fingerprint they collapse to **52 unique motions** (234 of the names are the exact
+same fade-up). The [`demo/catalog/`](demo/catalog/) gallery is therefore **de-duped to the
+65 real presets** (52 motions, 13 of which also ship a looping variant), grouped into
+**入场 (28) · 出场 (24) · 循环 (13)**. Each card is named for the motion it actually performs,
+shows how many original names collapsed into it (`原库 ×N 同款`), and stays searchable by the
+old names. Category tabs, search, a live "preview text" box, per-card copy, and
+IntersectionObserver lazy-play round it out. The de-dup map lives in
+[`assets/library/presets.js`](assets/library/presets.js).
 
 Drop it into any page with no build step:
 
@@ -73,9 +79,10 @@ animate-text/
 │   ├── catalog.json         # which effects are showcased
 │   ├── renderer-recipes.json
 │   ├── library-adapters.json
-│   ├── library/             # the 999-effect drop-in library (喂鱼字体动效库)
-│   │   ├── jy-text-animations.js   # all 999 effects + JYTextAnimations API
+│   ├── library/             # the drop-in motion library (喂鱼字体动效库)
+│   │   ├── jy-text-animations.js   # 999 named functions + JYTextAnimations API
 │   │   ├── jy-text-animations.css
+│   │   ├── presets.js              # de-dup map → 65 real presets (what the gallery shows)
 │   │   └── catalog.csv             # id · name · group · kind · timing index
 │   └── …
 ├── references/              # catalog, schema, selection guide, implementation notes
