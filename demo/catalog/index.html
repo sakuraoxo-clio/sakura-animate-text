@@ -3,10 +3,26 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>喂鱼字体动效库 · 999 live catalog</title>
-<meta name="description" content="999 条可直接调用的文字动效，浏览器内实时渲染，点一下复制即用。by 喂鱼 / sakura." />
+<title>喂鱼字体动效库 · live catalog</title>
+<meta name="description" content="65 个去重后的真实文字动法，浏览器内实时渲染，点一下复制即用。by 喂鱼 / sakuraoxo." />
 <link rel="stylesheet" href="../../assets/library/jy-text-animations.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
 <style>
+  /* 中文展示字体：Eva 宋体（family: SourceHanSerifSC EvaJian），按 unicode-range 拆两片：
+     品牌片 10KB 默认即载；CJK 片 1.5MB 仅在输入自定义中文时才下载。CJK 规则在前、品牌规则在后，
+     品牌中文字（喂鱼视频…）命中重叠区时用后者，默认页因此只下品牌片。 */
+  @font-face {
+    font-family: "Eva Ming"; font-weight: 700; font-display: swap;
+    src: url(../../assets/library/fonts/eva-ming-cjk.woff2) format("woff2");
+    unicode-range: U+4E00-9FFF;
+  }
+  @font-face {
+    font-family: "Eva Ming"; font-weight: 700; font-display: swap;
+    src: url(../../assets/library/fonts/eva-ming-brand.woff2) format("woff2");
+    unicode-range: U+0020-00FF, U+5582, U+9C7C, U+89C6, U+9891, U+5B57, U+4F53, U+52A8, U+6548;
+  }
   :root {
     --bg: #0a0a0b;
     --card: #141417;
@@ -135,7 +151,12 @@
     min-height: 0; width: 100%; height: 100%;
     border-radius: 0;
   }
-  .stage .jyta-text { color: #fafafa; font-size: 28px; padding: 0 14px; text-align: center; }
+  /* showcase text: English (Latin) → Space Grotesk; Chinese → Eva 宋体.
+     Latin-first so sakuraoxo uses Space Grotesk; CJK glyphs fall through to Eva Ming. */
+  .stage .jyta-text {
+    color: #fafafa; font-size: 28px; padding: 0 14px; text-align: center;
+    font-family: "Space Grotesk", "Eva Ming", -apple-system, "PingFang SC", serif;
+  }
 
   .meta { padding: 14px 16px 16px; }
   .meta .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }

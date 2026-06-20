@@ -83,7 +83,8 @@ animate-text/
 │   │   ├── jy-text-animations.js   # 999 named functions + JYTextAnimations API
 │   │   ├── jy-text-animations.css
 │   │   ├── presets.js              # de-dup map → 65 real presets (what the gallery shows)
-│   │   └── catalog.csv             # id · name · group · kind · timing index
+│   │   ├── catalog.csv             # id · name · group · kind · timing index
+│   │   └── fonts/                  # showcase webfonts: Eva 宋体 subset (中文) + NOTICE
 │   └── …
 ├── references/              # catalog, schema, selection guide, implementation notes
 ├── scripts/                 # optional Node helpers (list / get / find specs)
