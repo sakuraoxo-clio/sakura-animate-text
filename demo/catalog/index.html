@@ -252,16 +252,15 @@
         <input id="preview" type="text" placeholder="默认双语演示" maxlength="16" />
       </div>
       <div class="spacer"></div>
-      <div class="count-badge">显示 <b id="shown">65</b> / 65 个动法 · 覆盖原库 999 命名</div>
+      <div class="count-badge">显示 <b id="shown">65</b> / 共 65 个动法</div>
     </div>
   </div>
 
   <div class="grid" id="grid"></div>
 
   <footer>
-    这里展示的是 <b>65 个去重后的真实动法</b>。原库 <code>jy-text-animations.js</code> 里挂着 999 个名字，但按关键帧去重后只有 52 套不同动法（其中 13 套另有循环变体）——234 个名字其实是同一个淡入。
-    每张卡列出它在原库里覆盖的「同款」数量，旧名字（如「描边粉笔」）仍可搜到。单条入口 <code>JYTextAnimations.play(id, "#stage", "你的文字")</code>。
-    只有视口内的卡片会播放（IntersectionObserver 懒加载）。动效是「干净复刻」实现，不含任何第三方剪辑软件的原始源码。
+    60+ 种文字出现动效，分入场 / 出场 / 循环，持续更新。每张卡都在浏览器里实时渲染，单条入口 <code>JYTextAnimations.play(id, "#stage", "你的文字")</code>。
+    只有视口内的卡片会播放（IntersectionObserver 懒加载），所以满屏动效也不卡。
     <div class="sig">
       <div class="avatar">喂</div>
       <div class="who">

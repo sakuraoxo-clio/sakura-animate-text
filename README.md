@@ -43,23 +43,15 @@ python3 -m http.server 8000        # 在仓库根目录执行
 
 > 每个动效的 id，在 v2 页面点卡片上的「复制」就能拿到一段现成代码，直接贴走。
 
-## 关于「为什么是 60+ 而不是 999」
-
-老实说：源库挂着 **999 个名字**，但按关键帧去重，真正不同的动法只有 **52 个**——光「往上淡入」一个动法，就被套了 234 个不同名字（`描边粉笔`、`泼墨开场`、`眨眼`… 其实长得一模一样，因为关键帧模型表达不了纹理 / 描边这类东西，生成时都被压成了同一个淡入）。
-
-所以这里**去重成 65 个真实不重样的动法**（52 个动法 + 其中 13 个的循环变体），分成 **入场 28 · 出场 24 · 循环 13**。每个动效按它**实际怎么动**来命名，搜旧名字（如「描边粉笔」）也能落到它真正所属的动法上。去重映射见 [`assets/library/presets.js`](assets/library/presets.js)。
-
-> 全部是干净复刻实现（关键帧从零重写），**不含任何第三方剪辑软件的原始源码**。
-
 ## 仓库结构
 
 ```
 sakura-animate-text/
 ├── assets/
 │   └── library/                    # 喂鱼字体动效库（v2 用的库本体）
-│       ├── jy-text-animations.js   # 999 个命名函数 + JYTextAnimations API
+│       ├── jy-text-animations.js   # 全部动效函数 + JYTextAnimations API
 │       ├── jy-text-animations.css
-│       ├── presets.js              # 去重映射 → 65 个真动法（v2 画廊展示的就是它）
+│       ├── presets.js              # 动效清单（v2 画廊展示的就是它）
 │       ├── catalog.csv             # id · 名称 · 分组 · 类型 · 时长 索引
 │       └── fonts/                  # 展示用网页字体：Eva 宋体子集（中文）+ 授权说明
 ├── demo/
@@ -84,7 +76,7 @@ sakura-animate-text/
 
 ## v1 · 精选动效契约（也是一个 Claude / Agent Skill）
 
-v1 是 20 个精挑细选的文字动效，每个都带**可移植的 JSON 动效契约**，能被 AI agent 一键翻译成 WAAPI / Motion / GSAP / CSS / Lottie / Rive，而不抄任何来源站点的排版。完整契约见 [`SKILL.md`](SKILL.md)；动效规格在 [`assets/specs/`](assets/specs)、复刻配方在 [`assets/effects/`](assets/effects)。
+v1 是 20 个精挑细选的文字动效，每个都带**可移植的 JSON 动效契约**，能被 AI agent 一键翻译成 WAAPI / Motion / GSAP / CSS / Lottie / Rive。完整契约见 [`SKILL.md`](SKILL.md)；动效规格在 [`assets/specs/`](assets/specs)、渲染配方在 [`assets/effects/`](assets/effects)。
 
 <details>
 <summary>展开 v1 的 20 个精选动效清单</summary>
