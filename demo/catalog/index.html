@@ -227,7 +227,7 @@
       </div>
       <div class="field preview">
         <label>预览文字</label>
-        <input id="preview" type="text" value="字体动效" maxlength="12" />
+        <input id="preview" type="text" placeholder="默认双语演示" maxlength="16" />
       </div>
       <div class="spacer"></div>
       <div class="count-badge">显示 <b id="shown">65</b> / 65 个动法 · 覆盖原库 999 命名</div>
@@ -256,22 +256,25 @@
   <script>
   (function () {
     "use strict";
-    const DEFAULT_TEXT = "字体动效";
+    const SAMPLES = ["喂鱼AI视频", "sakuraoxo"];   // bilingual showcase text (中文 / English)
     const grid = document.getElementById("grid");
     const previewInput = document.getElementById("preview");
     const searchInput = document.getElementById("search");
     const shownEl = document.getElementById("shown");
     const groupClass = { "入场": "g-in", "出场": "g-out", "循环": "g-loop" };
 
-    function previewText() {
-      const v = (previewInput.value || "").trim();
-      return v || DEFAULT_TEXT;
+    function customText() { return (previewInput.value || "").trim(); }
+    // default: alternate 中文 / English per loop; custom text (if typed) overrides both
+    function sampleText(card, iter) {
+      const c = customText();
+      if (c) return c;
+      return SAMPLES[(((card && card._textBase) || 0) + (iter || 0)) % SAMPLES.length];
     }
 
     // ---- build cards from the de-duped preset list (65 real motions) ----
     const all = (window.JYTA_PRESETS || []);   // [{id,name,kind,group,count,loop,aliases}, ...]
     const frag = document.createDocumentFragment();
-    const cards = all.map(function (m) {
+    const cards = all.map(function (m, idx) {
       const card = document.createElement("article");
       card.className = "card";
       card.dataset.id = m.id;
@@ -279,23 +282,21 @@
       // search matches the honest name, the kind, the id, AND every original 剪映 name
       // that collapsed into this motion — so e.g. searching "描边粉笔" still lands here
       card.dataset.search = ((m.name || "") + " " + (m.aliases || []).join(" ") + " " + m.id + " " + (m.kind || "")).toLowerCase();
-      var aliasNote = (m.count > 1) ? '<span class="chip alias">原库 ×' + m.count + ' 同款</span>' : '';
       card.innerHTML =
         '<div class="stage"></div>' +
         '<div class="meta">' +
           '<div class="top">' +
-            '<div><div class="name"></div><code class="id"></code></div>' +
+            '<div class="name"></div>' +
             '<button class="copy" type="button">复制</button>' +
           '</div>' +
           '<div class="chips">' +
             '<span class="chip ' + (groupClass[m.group] || "") + '">' + m.group + '</span>' +
             (m.kind ? '<span class="chip">' + m.kind + '</span>' : '') +
-            aliasNote +
           '</div>' +
         '</div>';
       card.querySelector(".name").textContent = m.name || "(未命名)";
-      card.querySelector(".id").textContent = m.id;
       card._stage = card.querySelector(".stage");
+      card._textBase = idx;     // staggers which language each card starts on
       card._player = null;
       frag.appendChild(card);
       return card;
@@ -323,17 +324,19 @@
       function wait(ms) { return new Promise(function (r) { s.timer = setTimeout(r, ms); }); }
 
       (async function run() {
+        let iter = 0;   // advances the 中文 / English sample each cycle
         // desync from id so the whole wall doesn't pulse in unison
         await wait(((parseInt(id.slice(-3), 10) || 0) % 9) * 90);
         if (!s.alive) return;
 
         if (group === "循环") {
-          try { s.handle = JYTextAnimations.play(id, stage, previewText(), { direction: "alternate" }); } catch (e) {}
+          try { s.handle = JYTextAnimations.play(id, stage, sampleText(card, 0), { direction: "alternate" }); } catch (e) {}
           return; // loops natively, forever
         }
 
         while (s.alive) {
-          try { s.handle = JYTextAnimations.play(id, stage, previewText()); } catch (e) { return; }
+          try { s.handle = JYTextAnimations.play(id, stage, sampleText(card, iter)); } catch (e) { return; }
+          iter++;
           if (isNativeLoop(s.handle)) return; // safety net for any self-looping entrance
 
           if (group === "出场") {
