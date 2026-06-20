@@ -1,163 +1,131 @@
-# animate-text
+# 喂鱼字体动效库
 
-> A Claude / agent **skill** by [**Sakura**](https://github.com/sakuraoxo-clio) ·
-> [Live demo](https://sakuraoxo-clio.github.io/sakura-animate-text/demo/) ·
-> MIT licensed · contributions welcome
+> 抖音 **@喂鱼** · 让你用 AI 做视频时，字体出现效果更好
+> [在线预览](https://sakuraoxo-clio.github.io/sakura-animate-text/demo/catalog/) · MIT 开源 · 觉得有用欢迎 ⭐ Star
 
-A curated **text-animation catalog** packaged as an agent skill. It ships exact JSON motion
-contracts for headings, labels, counters, and text swaps, and tells an agent how to translate
-each named effect into **WAAPI, Motion (motion.dev), GSAP, CSS, Lottie, or Rive** — without
-copying the source site's typography or layout.
+一套**可直接复制使用的文字出现动效库**。浏览器里实时预览，挑中意的一键复制，贴进你的视频、网页或项目——不用装任何东西，也不用会写动画。
 
 <p align="center">
-  <img src="demo/media/preview.gif" alt="animate-text live preview" width="900">
+  <img src="demo/media/preview.gif" alt="喂鱼字体动效库 实时预览" width="900">
 </p>
 
-> Every effect above is rendered **live in the browser, straight from this skill's own JSON
-> recipes** — it is not a video. What you see is exactly the motion an agent reproduces.
+> 上面每一个都是**浏览器里实时跑出来的动画**，不是录屏、不是 GIF。你复制走的就是这段效果本身。
 
-## ▶ Live demo
+## ▶ 在线预览
 
-**→ [sakuraoxo-clio.github.io/sakura-animate-text/demo](https://sakuraoxo-clio.github.io/sakura-animate-text/demo/)**
+| 版本 | 是什么 | 打开 |
+|---|---|---|
+| **v2 · 全量库** | 60+ 种文字出现动效，分入场 / 出场 / 循环，持续更新，复制即用 | [demo/catalog →](https://sakuraoxo-clio.github.io/sakura-animate-text/demo/catalog/) |
+| **v1 · 精选版** | 20 个手工打磨的动效，附精确动效参数，可翻译成 GSAP / WAAPI / CSS / Lottie / Rive | [demo →](https://sakuraoxo-clio.github.io/sakura-animate-text/demo/) |
 
-The [`demo/`](demo/) folder is a zero-dependency gallery that renders all 20 showcased effects
-on a loop. Run it locally with no build step:
+本地跑（零依赖，无需构建）：
 
 ```bash
-cd demo
-python3 -m http.server 8000
-# open http://localhost:8000
+python3 -m http.server 8000        # 在仓库根目录执行
+# 浏览器打开 http://localhost:8000/demo/catalog/
 ```
 
-<p align="center">
-  <img src="demo/media/catalog-grid.png" alt="All 20 effects" width="820">
-</p>
+## 直接用到你的项目
 
-## ▶ 喂鱼字体动效库 · live catalog
-
-**→ [sakuraoxo-clio.github.io/sakura-animate-text/demo/catalog](https://sakuraoxo-clio.github.io/sakura-animate-text/demo/catalog/)**
-
-Alongside the 20 curated motion contracts, the repo ships a **drop-in motion library**, a
-clean-room reimplementation of common short-form text animations, every motion callable by id.
-
-The source library carries 999 named functions — but those names are heavily padded: by
-keyframe fingerprint they collapse to **52 unique motions** (234 of the names are the exact
-same fade-up). The [`demo/catalog/`](demo/catalog/) gallery is therefore **de-duped to the
-65 real presets** (52 motions, 13 of which also ship a looping variant), grouped into
-**入场 (28) · 出场 (24) · 循环 (13)**. Each card is named for the motion it actually performs,
-shows how many original names collapsed into it (`原库 ×N 同款`), and stays searchable by the
-old names. Category tabs, search, a live "preview text" box, per-card copy, and
-IntersectionObserver lazy-play round it out. The de-dup map lives in
-[`assets/library/presets.js`](assets/library/presets.js).
-
-Drop it into any page with no build step:
+无需构建，三行接入，文字换成你自己的：
 
 ```html
 <link rel="stylesheet" href="assets/library/jy-text-animations.css">
 <div id="stage"></div>
 <script src="assets/library/jy-text-animations.js"></script>
 <script>
-  // play one effect by id, on your own text
+  // 按 id 播放一个动效
   JYTextAnimations.play("7239559299196785209", "#stage", "你的文字");
-  JYTextAnimations.list("入场");                 // browse a group
-  JYTextAnimations.get("7239559299196785209");  // grab the raw function
+  JYTextAnimations.list("入场");                 // 按分组浏览：入场 / 出场 / 循环
+  JYTextAnimations.get("7239559299196785209");  // 拿到原始函数自己调
 </script>
 ```
 
-> These are **clean reimplementations** (keyframe contracts re-authored from scratch) — the
-> library contains no third-party editor's original source. Effect names and ids are catalogued
-> in [`assets/library/catalog.csv`](assets/library/catalog.csv).
+> 每个动效的 id，在 v2 页面点卡片上的「复制」就能拿到一段现成代码，直接贴走。
 
-## What's in the box
+## 关于「为什么是 60+ 而不是 999」
+
+老实说：源库挂着 **999 个名字**，但按关键帧去重，真正不同的动法只有 **52 个**——光「往上淡入」一个动法，就被套了 234 个不同名字（`描边粉笔`、`泼墨开场`、`眨眼`… 其实长得一模一样，因为关键帧模型表达不了纹理 / 描边这类东西，生成时都被压成了同一个淡入）。
+
+所以这里**去重成 65 个真实不重样的动法**（52 个动法 + 其中 13 个的循环变体），分成 **入场 28 · 出场 24 · 循环 13**。每个动效按它**实际怎么动**来命名，搜旧名字（如「描边粉笔」）也能落到它真正所属的动法上。去重映射见 [`assets/library/presets.js`](assets/library/presets.js)。
+
+> 全部是干净复刻实现（关键帧从零重写），**不含任何第三方剪辑软件的原始源码**。
+
+## 仓库结构
 
 ```
-animate-text/
-├── SKILL.md                 # the skill contract an agent reads
+sakura-animate-text/
 ├── assets/
-│   ├── specs/*.json         # 24 portable motion contracts (the authoritative intent)
-│   ├── effects/*.json       # 24 exact reproduction recipes (renderer + playback + adapters)
-│   ├── catalog.json         # which effects are showcased
-│   ├── renderer-recipes.json
-│   ├── library-adapters.json
-│   ├── library/             # the drop-in motion library (喂鱼字体动效库)
-│   │   ├── jy-text-animations.js   # 999 named functions + JYTextAnimations API
-│   │   ├── jy-text-animations.css
-│   │   ├── presets.js              # de-dup map → 65 real presets (what the gallery shows)
-│   │   ├── catalog.csv             # id · name · group · kind · timing index
-│   │   └── fonts/                  # showcase webfonts: Eva 宋体 subset (中文) + NOTICE
-│   └── …
-├── references/              # catalog, schema, selection guide, implementation notes
-├── scripts/                 # optional Node helpers (list / get / find specs)
-└── demo/                    # the live visual gallery (this is what GitHub shows off)
-    ├── index.html           # 20 curated motion contracts
-    ├── gallery.js           # faithful JS impl of all four showcase renderers
-    ├── build-data.mjs       # bundles assets/effects → effects-data.js
-    ├── catalog/index.html   # 999 喂鱼字体动效库 live gallery
-    └── media/               # preview.gif + catalog-grid.png
+│   └── library/                    # 喂鱼字体动效库（v2 用的库本体）
+│       ├── jy-text-animations.js   # 999 个命名函数 + JYTextAnimations API
+│       ├── jy-text-animations.css
+│       ├── presets.js              # 去重映射 → 65 个真动法（v2 画廊展示的就是它）
+│       ├── catalog.csv             # id · 名称 · 分组 · 类型 · 时长 索引
+│       └── fonts/                  # 展示用网页字体：Eva 宋体子集（中文）+ 授权说明
+├── demo/
+│   ├── index.html                  # v1 · 20 个精选动效
+│   ├── catalog/index.html          # v2 · 喂鱼字体动效库实时画廊
+│   ├── gallery.js · build-data.mjs # v1 画廊渲染 / 数据构建
+│   └── media/                      # 预览图
+├── assets/specs · effects · …      # v1 的 JSON 动效契约（给 AI agent 翻译用）
+├── references/ · scripts/          # v1 的说明文档与脚本
+└── SKILL.md                        # v1 作为 Claude / Agent Skill 的契约
 ```
 
-The skill ships **24 specs**; the gallery showcases the **20** marked visible in
-[`assets/catalog.json`](assets/catalog.json).
+## 字体
 
-## Effect catalog
+| 用途 | 字体 | 说明 |
+|---|---|---|
+| 中文展示 | **Eva 宋体**（思源宋体衍生） | 已子集化：品牌片 10KB 默认载入，常用字片 1.5MB 仅在输入自定义中文时才下载 |
+| 标题 | **思源宋体**（Noto Serif SC） | 走 Google Fonts |
+| 英文展示 | **Space Grotesk** | 走 Google Fonts；中英混排时拉丁走它、汉字落 Eva 宋体 |
 
-| id | name | target | description |
-|----|------|--------|-------------|
-| `soft-blur-in` | Soft Blur | per-character | Per-character fade-in with a gentle blur and upward motion. Apple's signature hero-title reveal. |
-| `per-character-rise` | Per-Character Rise | per-character | Letters slide up from below with no blur — crisp, deliberate, kinetic. |
-| `per-word-crossfade` | Per-Word Crossfade | per-word | Words gently fade into place one after another with a short vertical drift. |
-| `spring-scale-in` | Spring Scale In | per-word | Words pop in with a soft overshoot scale, like a spring settling. |
-| `mask-reveal-up` | Mask Reveal Up | per-line | Lines reveal upward with a soft masked feel and compact stagger. |
-| `line-by-line-slide` | Line-by-Line Slide | per-line | Each line enters from the left, exits to the right, for a flowing paragraph reveal. |
-| `typewriter` | Typewriter | per-character | Per-character stepped reveal with a minimal editorial typing rhythm. |
-| `micro-scale-fade` | Micro Scale Fade | whole | A calm, tiny scale pop for subtle premium polish on labels. |
-| `shimmer-sweep` | Shimmer Sweep | whole | A subtle sweep across a clean headline, gliding from left to center. |
-| `fade-through` | Fade Through | whole | Material-style content transition: old fades out, new fades in. |
-| `shared-axis-y` | Word Cut Staircase | per-word | Per-word hard-cut transition with staircase timing for sharp swaps. |
-| `shared-axis-z` | Shared Axis Z | whole | Scale-based shared-axis transition for focus shifts and depth. |
-| `blur-out-up` | Blur Out Up | per-word | Words arrive clean and depart upward with increasing blur. |
-| `scale-down-fade` | Scale Down Fade | whole | Restrained scale-down fade on exit for a premium settle. |
-| `focus-blur-resolve` | Focus Blur Resolve | whole | A focus pull from heavy blur to crisp text, then a soft blur-out. |
-| `bottom-up-letters` | Bottom-Up Letters | per-character | Letters rise from below in a pronounced staircase, zero blur. |
-| `top-down-letters` | Top-Down Letters | per-character | Letters descend from above in a pronounced staircase, zero blur. |
-| `kinetic-center-build` | Kinetic Center Build | per-word | Words enter right-to-left and push the line until the phrase locks centered. |
-| `short-slide-right` | Short Slide Right | per-word | The phrase glides in as one move while words reveal in sequence via opacity. |
-| `short-slide-down` | Short Slide Down | per-word | Words drop in from above, pushing the stack into a centered three-line lockup. |
+字体授权（均为 SIL OFL 1.1）详见 [`assets/library/fonts/NOTICE.md`](assets/library/fonts/NOTICE.md)。
 
-Four more specs ship hidden (`depth-parallax-words`, `shared-axis-x`, `stagger-from-center`,
-`stagger-from-edges`) and are usable by an agent even though the gallery doesn't show them.
+## v1 · 精选动效契约（也是一个 Claude / Agent Skill）
 
-## How an agent uses it
+v1 是 20 个精挑细选的文字动效，每个都带**可移植的 JSON 动效契约**，能被 AI agent 一键翻译成 WAAPI / Motion / GSAP / CSS / Lottie / Rive，而不抄任何来源站点的排版。完整契约见 [`SKILL.md`](SKILL.md)；动效规格在 [`assets/specs/`](assets/specs)、复刻配方在 [`assets/effects/`](assets/effects)。
 
-1. Pick an effect by id, or search by intent (`references/catalog.md`, or
-   `node scripts/find-spec.mjs "<query>"`).
-2. Read [`assets/specs/<id>.json`](assets/specs) for the **portable** motion contract, or
-   [`assets/effects/<id>.json`](assets/effects) for the **exact** reproduction recipe
-   (renderer, playback loop, timing, stage requirements, and per-library adapters).
-3. Translate into the requested stack, preserving `target`, easing, stagger, and transforms.
-   When a target library is named, only the matching adapter is used — no silent substitutions.
+<details>
+<summary>展开 v1 的 20 个精选动效清单</summary>
 
-See [`SKILL.md`](SKILL.md) for the full contract.
+| id | 动法 | 粒度 |
+|----|------|------|
+| `soft-blur-in` | 逐字模糊上浮淡入（Apple 风标题揭示） | 逐字 |
+| `per-character-rise` | 逐字自下升起，无模糊，干净利落 | 逐字 |
+| `per-word-crossfade` | 逐词淡入并轻微上移 | 逐词 |
+| `spring-scale-in` | 逐词弹性放大入场，像弹簧回稳 | 逐词 |
+| `mask-reveal-up` | 逐行向上揭开，柔和遮罩感 | 逐行 |
+| `line-by-line-slide` | 逐行从左入、向右出，段落流动 | 逐行 |
+| `typewriter` | 逐字打字机节奏 | 逐字 |
+| `micro-scale-fade` | 极小幅放大，标签的高级微动 | 整体 |
+| `shimmer-sweep` | 清爽标题上的扫光 | 整体 |
+| `fade-through` | Material 风内容切换：旧淡出、新淡入 | 整体 |
+| `shared-axis-y` | 逐词硬切，阶梯时序 | 逐词 |
+| `shared-axis-z` | 缩放式共享轴切换，景深聚焦 | 整体 |
+| `blur-out-up` | 词干净到来、上浮并渐糊离开 | 逐词 |
+| `scale-down-fade` | 克制的缩小淡出收尾 | 整体 |
+| `focus-blur-resolve` | 从重模糊拉到清晰再轻糊出 | 整体 |
+| `bottom-up-letters` | 字母自下显著阶梯升起 | 逐字 |
+| `top-down-letters` | 字母自上显著阶梯降落 | 逐字 |
+| `kinetic-center-build` | 词从右入并推动整行，最终居中锁定 | 逐词 |
+| `short-slide-right` | 整句滑入、词按透明度依次显现 | 逐词 |
+| `short-slide-down` | 词自上落下，叠成居中三行 | 逐词 |
 
-## Regenerating the demo data
+另有 4 个规格随包但默认不展示（`depth-parallax-words`、`shared-axis-x`、`stagger-from-center`、`stagger-from-edges`），agent 仍可调用。
 
-`demo/effects-data.js` is generated so the gallery works even when opened from `file://`:
+</details>
 
-```bash
-node demo/build-data.mjs
-```
+## 作者
 
-## Author
+**喂鱼** · 一线带团队的 AI × IP 操盘手 / IP 就业教育者。
 
-**Sakura** — building at the intersection of AI × IP.
+- 抖音：**@喂鱼** —— 用 AI 做视频 · IP 运营
+- GitHub：[@sakuraoxo-clio](https://github.com/sakuraoxo-clio)
 
-- GitHub: [github.com/sakuraoxo-clio](https://github.com/sakuraoxo-clio)
-- This repo: [sakura-animate-text](https://github.com/sakuraoxo-clio/sakura-animate-text)
-
-If this skill or the demo gallery is useful to you, a ⭐ on the repo is appreciated.
-Issues and PRs welcome.
+觉得有用，给仓库点个 ⭐ **Star** 就是最好的支持。欢迎 Issue / PR。
 
 ## License
 
-[MIT](LICENSE) © Sakura. The demo gallery code in `demo/` is provided as-is for
-showcasing the catalog; the underlying motion specs are catalogued for portable reuse.
+- 代码 → [MIT](LICENSE) © 喂鱼 / sakuraoxo
+- 字体子集 → SIL OFL 1.1（Eva 宋体 / 思源宋体 / Space Grotesk），见 [`assets/library/fonts/NOTICE.md`](assets/library/fonts/NOTICE.md)
