@@ -33,6 +33,35 @@ python3 -m http.server 8000
   <img src="demo/media/catalog-grid.png" alt="All 20 effects" width="820">
 </p>
 
+## ▶ 喂鱼字体动效库 · 999 live catalog
+
+**→ [sakuraoxo-clio.github.io/sakura-animate-text/demo/catalog](https://sakuraoxo-clio.github.io/sakura-animate-text/demo/catalog/)**
+
+Alongside the 20 curated motion contracts, the repo ships a **999-effect drop-in library** —
+a clean-room reimplementation of common short-form text animations, every one callable by id.
+The [`demo/catalog/`](demo/catalog/) gallery renders all 999 live, grouped into
+**入场 (512) · 出场 (360) · 循环 (127)**, with category tabs, search, a live "preview text"
+box that retitles every card at once, and a per-card copy button. Only on-screen cards animate
+(IntersectionObserver), so 999 effects share one page without jank.
+
+Drop it into any page with no build step:
+
+```html
+<link rel="stylesheet" href="assets/library/jy-text-animations.css">
+<div id="stage"></div>
+<script src="assets/library/jy-text-animations.js"></script>
+<script>
+  // play one effect by id, on your own text
+  JYTextAnimations.play("7239559299196785209", "#stage", "你的文字");
+  JYTextAnimations.list("入场");                 // browse a group
+  JYTextAnimations.get("7239559299196785209");  // grab the raw function
+</script>
+```
+
+> These are **clean reimplementations** (keyframe contracts re-authored from scratch) — the
+> library contains no third-party editor's original source. Effect names and ids are catalogued
+> in [`assets/library/catalog.csv`](assets/library/catalog.csv).
+
 ## What's in the box
 
 ```
@@ -44,13 +73,18 @@ animate-text/
 │   ├── catalog.json         # which effects are showcased
 │   ├── renderer-recipes.json
 │   ├── library-adapters.json
+│   ├── library/             # the 999-effect drop-in library (喂鱼字体动效库)
+│   │   ├── jy-text-animations.js   # all 999 effects + JYTextAnimations API
+│   │   ├── jy-text-animations.css
+│   │   └── catalog.csv             # id · name · group · kind · timing index
 │   └── …
 ├── references/              # catalog, schema, selection guide, implementation notes
 ├── scripts/                 # optional Node helpers (list / get / find specs)
 └── demo/                    # the live visual gallery (this is what GitHub shows off)
-    ├── index.html
+    ├── index.html           # 20 curated motion contracts
     ├── gallery.js           # faithful JS impl of all four showcase renderers
     ├── build-data.mjs       # bundles assets/effects → effects-data.js
+    ├── catalog/index.html   # 999 喂鱼字体动效库 live gallery
     └── media/               # preview.gif + catalog-grid.png
 ```
 

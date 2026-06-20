@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>喂鱼字体动效库 · 999 live catalog</title>
+<meta name="description" content="999 条可直接调用的文字动效，浏览器内实时渲染，点一下复制即用。by 喂鱼 / sakura." />
+<link rel="stylesheet" href="../../assets/library/jy-text-animations.css" />
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --card: #141417;
+    --card-edge: #232328;
+    --ink: #f4f4f5;
+    --muted: #8a8a93;
+    --accent: #6ee7ff;
+    --pink: #ffd9ec;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "SF Pro Display", "PingFang SC", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  header {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 64px 28px 18px;
+  }
+  h1 {
+    font-size: clamp(32px, 5vw, 54px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 14px;
+    background: linear-gradient(120deg, #fff 28%, var(--pink) 64%, var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 680px;
+    margin: 0 0 6px;
+  }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 10px 17px; border-radius: 11px;
+    font-size: 14px; font-weight: 600; text-decoration: none;
+    transition: transform .2s, border-color .2s, background .2s;
+  }
+  .btn:hover { text-decoration: none; }
+  .btn svg { width: 18px; height: 18px; }
+  .btn-primary { color: #0a0a0b; background: linear-gradient(135deg, var(--pink) 0%, var(--accent) 100%); }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-ghost { color: var(--ink); border: 1px solid var(--card-edge); background: var(--card); }
+  .btn-ghost:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+  /* ---- sticky controls ---- */
+  .controls {
+    position: sticky; top: 0; z-index: 30;
+    background: rgba(10,10,11,0.82);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-edge);
+  }
+  .controls-inner {
+    max-width: 1240px; margin: 0 auto;
+    padding: 14px 28px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+  }
+  .tabs { display: inline-flex; gap: 6px; background: var(--card); border: 1px solid var(--card-edge); padding: 4px; border-radius: 12px; }
+  .tab {
+    appearance: none; border: 0; cursor: pointer;
+    background: transparent; color: var(--muted);
+    font-size: 13.5px; font-weight: 600;
+    padding: 7px 13px; border-radius: 8px;
+    transition: background .2s, color .2s;
+    font-family: inherit;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active { background: linear-gradient(135deg, var(--pink) 0%, var(--accent) 100%); color: #0a0a0b; }
+  .tab .n { opacity: .7; font-weight: 600; margin-left: 4px; font-size: 12px; }
+  .tab.active .n { opacity: .85; }
+
+  .field {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--card); border: 1px solid var(--card-edge);
+    border-radius: 11px; padding: 0 12px; height: 40px;
+  }
+  .field:focus-within { border-color: var(--accent); }
+  .field svg { width: 16px; height: 16px; color: var(--muted); flex: none; }
+  .field input {
+    border: 0; outline: 0; background: transparent;
+    color: var(--ink); font-size: 14px; font-family: inherit;
+    width: 168px;
+  }
+  .field input::placeholder { color: var(--muted); }
+  .field.preview input { width: 120px; }
+  .field label { color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+  .spacer { flex: 1 1 auto; }
+  .count-badge { color: var(--muted); font-size: 13px; white-space: nowrap; }
+  .count-badge b { color: var(--accent); font-weight: 700; }
+
+  /* ---- grid + cards (mirrors the curated demo) ---- */
+  .grid {
+    max-width: 1240px; margin: 0 auto;
+    padding: 22px 28px 110px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+  }
+  .empty { color: var(--muted); padding: 60px 28px; text-align: center; grid-column: 1 / -1; font-size: 15px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-edge);
+    border-radius: 18px; overflow: hidden;
+    transition: border-color .3s, transform .3s;
+  }
+  .card:hover { border-color: #34343c; transform: translateY(-2px); }
+  .stage {
+    height: 178px; position: relative; overflow: hidden;
+    border-bottom: 1px solid var(--card-edge);
+    background: radial-gradient(120% 120% at 50% 0%, #1b1b20 0%, #0f0f12 70%);
+  }
+  /* let the curated stage gradient show; library only paints text inside */
+  .stage .jyta-stage {
+    background: transparent !important;
+    min-height: 0; width: 100%; height: 100%;
+    border-radius: 0;
+  }
+  .stage .jyta-text { color: #fafafa; font-size: 28px; padding: 0 14px; text-align: center; }
+
+  .meta { padding: 14px 16px 16px; }
+  .meta .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .meta .name { font-size: 15.5px; font-weight: 650; line-height: 1.35; }
+  .meta .id {
+    display: inline-block; margin-top: 5px;
+    font-size: 11.5px; color: var(--accent);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    word-break: break-all;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
+  .chip {
+    font-size: 11px; font-weight: 600; letter-spacing: .02em;
+    padding: 3px 9px; border-radius: 999px;
+    background: #1d1d22; color: var(--muted); border: 1px solid var(--card-edge);
+  }
+  .chip.g-in { color: #7df0c4; border-color: #1f3a30; background: #122019; }
+  .chip.g-out { color: #ffb1c8; border-color: #3a1f2a; background: #20121a; }
+  .chip.g-loop { color: var(--accent); border-color: #1f3540; background: #102029; }
+  .copy {
+    appearance: none; cursor: pointer; flex: none;
+    border: 1px solid var(--card-edge); background: #1b1b20;
+    color: var(--muted); font-family: inherit;
+    font-size: 12px; font-weight: 600;
+    padding: 6px 11px; border-radius: 9px;
+    transition: color .2s, border-color .2s, background .2s;
+  }
+  .copy:hover { color: var(--ink); border-color: var(--accent); }
+  .copy.done { color: #0a0a0b; background: linear-gradient(135deg, var(--pink) 0%, var(--accent) 100%); border-color: transparent; }
+
+  footer {
+    max-width: 1240px; margin: 0 auto;
+    padding: 0 28px 90px; color: var(--muted); font-size: 13px; line-height: 1.7;
+  }
+  footer code { color: var(--accent); }
+  .sig { display: flex; align-items: center; gap: 12px; margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--card-edge); }
+  .sig .avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 15px; color: #0a0a0b; background: linear-gradient(135deg, var(--pink) 0%, var(--accent) 100%); flex: none; }
+  .sig .who b { color: var(--ink); font-weight: 650; }
+
+  .watermark {
+    position: fixed; top: 16px; right: 18px; z-index: 40;
+    display: flex; align-items: center; gap: 7px;
+    padding: 6px 12px 6px 8px; border-radius: 999px;
+    background: rgba(20,20,23,0.72); border: 1px solid var(--card-edge);
+    backdrop-filter: blur(8px); font-size: 12px; color: var(--muted);
+    text-decoration: none; transition: border-color .25s, color .25s;
+  }
+  .watermark:hover { border-color: var(--accent); color: var(--ink); text-decoration: none; }
+  .watermark .dot { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--pink) 0%, var(--accent) 100%); display: grid; place-items: center; color: #0a0a0b; font-weight: 700; font-size: 11px; }
+  .watermark b { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 560px) {
+    .field input { width: 120px; }
+    .field.preview input { width: 96px; }
+    .spacer { flex-basis: 100%; height: 0; }
+  }
+</style>
+</head>
+<body>
+  <a class="watermark" href="https://github.com/sakuraoxo-clio/sakura-animate-text" target="_blank" rel="noopener">
+    <span class="dot">喂</span><span>by&nbsp;<b>喂鱼</b></span>
+  </a>
+
+  <header>
+    <h1>喂鱼字体动效库</h1>
+    <p>999 条可直接调用的文字动效。每一张卡片都在浏览器里实时循环渲染——不是视频、不是 GIF，就是你复制走之后跑出来的那一帧。</p>
+    <p>顶部改「预览文字」，整面墙会跟着换字；点卡片上的「复制」，拿到一段即贴即用的 <code>JYTextAnimations.play(...)</code> 代码。</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://github.com/sakuraoxo-clio/sakura-animate-text" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        View on GitHub
+      </a>
+      <a class="btn btn-ghost" href="../">← 20 条精选动效契约 demo</a>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="controls-inner">
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-group="">全部<span class="n" id="n-all">999</span></button>
+        <button class="tab" data-group="入场">入场<span class="n" id="n-in">512</span></button>
+        <button class="tab" data-group="出场">出场<span class="n" id="n-out">360</span></button>
+        <button class="tab" data-group="循环">循环<span class="n" id="n-loop">127</span></button>
+      </div>
+      <div class="field">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="search" type="search" placeholder="搜名称 / ID…" autocomplete="off" />
+      </div>
+      <div class="field preview">
+        <label>预览文字</label>
+        <input id="preview" type="text" value="字体动效" maxlength="12" />
+      </div>
+      <div class="spacer"></div>
+      <div class="count-badge">显示 <b id="shown">999</b> / 999</div>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    全部由 <code>assets/library/jy-text-animations.js</code> 驱动，单条入口 <code>JYTextAnimations.play(id, "#stage", "你的文字")</code>。
+    只有视口内的卡片会播放（IntersectionObserver 懒加载），所以 999 条同页也不卡。
+    动效是「干净复刻」实现，不含任何第三方剪辑软件的原始源码。
+    <div class="sig">
+      <div class="avatar">喂</div>
+      <div class="who">
+        喂鱼 · AI&nbsp;×&nbsp;IP &nbsp;·&nbsp;
+        <a href="https://github.com/sakuraoxo-clio" target="_blank" rel="noopener">github.com/sakuraoxo-clio</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/sakuraoxo-clio/sakura-animate-text" target="_blank" rel="noopener">source &amp; skill repo</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/library/jy-text-animations.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    const HOLD_MS = 1100;            // pause between replays of a one-shot effect
+    const DEFAULT_TEXT = "字体动效";
+    const grid = document.getElementById("grid");
+    const previewInput = document.getElementById("preview");
+    const searchInput = document.getElementById("search");
+    const shownEl = document.getElementById("shown");
+    const groupClass = { "入场": "g-in", "出场": "g-out", "循环": "g-loop" };
+
+    function previewText() {
+      const v = (previewInput.value || "").trim();
+      return v || DEFAULT_TEXT;
+    }
+
+    // ---- build all cards from the library's own registry ----
+    const all = JYTextAnimations.list();   // [{id,title,group,kind}, ...]
+    const frag = document.createDocumentFragment();
+    const cards = all.map(function (m) {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.dataset.id = m.id;
+      card.dataset.group = m.group;
+      card.dataset.search = ((m.title || "") + " " + m.id + " " + (m.kind || "")).toLowerCase();
+      card.innerHTML =
+        '<div class="stage"></div>' +
+        '<div class="meta">' +
+          '<div class="top">' +
+            '<div><div class="name"></div><code class="id"></code></div>' +
+            '<button class="copy" type="button">复制</button>' +
+          '</div>' +
+          '<div class="chips">' +
+            '<span class="chip ' + (groupClass[m.group] || "") + '">' + m.group + '</span>' +
+            (m.kind ? '<span class="chip">' + m.kind + '</span>' : '') +
+          '</div>' +
+        '</div>';
+      card.querySelector(".name").textContent = m.title || "(未命名)";
+      card.querySelector(".id").textContent = m.id;
+      card._stage = card.querySelector(".stage");
+      card._player = null;
+      frag.appendChild(card);
+      return card;
+    });
+    grid.appendChild(frag);
+
+    // ---- per-card looping player (drives the replica library) ----
+    function playCard(card) {
+      let handle = null, timer = null, alive = true;
+      function once() {
+        if (!alive) return;
+        try { handle = JYTextAnimations.play(card.dataset.id, card._stage, previewText()); }
+        catch (e) { return; }
+        const anims = (handle && handle.animations) || [];
+        const native = anims.some(function (a) {
+          try { return a.effect.getTiming().iterations === Infinity; } catch (_) { return false; }
+        });
+        if (native) return;            // looping effects loop themselves via WAAPI
+        Promise.all(anims.map(function (a) { return a.finished.catch(function () {}); }))
+          .then(function () { if (alive) timer = setTimeout(once, HOLD_MS); });
+      }
+      once();
+      return {
+        stop: function () {
+          alive = false;
+          if (handle) { try { handle.stop(); } catch (_) {} }
+          if (timer) clearTimeout(timer);
+          card._stage.innerHTML = "";
+        }
+      };
+    }
+
+    // ---- only animate cards that are on screen ----
+    const io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        const card = e.target;
+        if (e.isIntersecting) {
+          if (!card._player) card._player = playCard(card);
+        } else if (card._player) {
+          card._player.stop();
+          card._player = null;
+        }
+      });
+    }, { root: null, rootMargin: "300px 0px", threshold: 0.01 });
+    cards.forEach(function (c) { io.observe(c); });
+
+    // ---- filter (tab group + search) ----
+    let activeGroup = "";
+    let query = "";
+    function applyFilter() {
+      let shown = 0;
+      cards.forEach(function (card) {
+        const okGroup = !activeGroup || card.dataset.group === activeGroup;
+        const okSearch = !query || card.dataset.search.indexOf(query) !== -1;
+        const visible = okGroup && okSearch;
+        // toggling display flips IO -> hidden cards auto-stop, shown cards auto-play
+        card.style.display = visible ? "" : "none";
+        if (visible) shown++;
+      });
+      shownEl.textContent = shown;
+    }
+
+    document.getElementById("tabs").addEventListener("click", function (e) {
+      const btn = e.target.closest(".tab");
+      if (!btn) return;
+      activeGroup = btn.dataset.group;
+      document.querySelectorAll(".tab").forEach(function (t) { t.classList.toggle("active", t === btn); });
+      applyFilter();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    let searchTimer = null;
+    searchInput.addEventListener("input", function () {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(function () {
+        query = searchInput.value.trim().toLowerCase();
+        applyFilter();
+      }, 180);
+    });
+
+    // ---- preview-text change: restart whatever is currently playing ----
+    let previewTimer = null;
+    previewInput.addEventListener("input", function () {
+      clearTimeout(previewTimer);
+      previewTimer = setTimeout(function () {
+        cards.forEach(function (card) {
+          if (card._player) { card._player.stop(); card._player = playCard(card); }
+        });
+      }, 260);
+    });
+
+    // ---- per-card copy ----
+    const CDN = "https://sakuraoxo-clio.github.io/sakura-animate-text/assets/library";
+    grid.addEventListener("click", function (e) {
+      const btn = e.target.closest(".copy");
+      if (!btn) return;
+      const id = btn.closest(".card").dataset.id;
+      const snippet =
+        '<link rel="stylesheet" href="' + CDN + '/jy-text-animations.css">\n' +
+        '<div id="stage"></div>\n' +
+        '<script src="' + CDN + '/jy-text-animations.js"><\/script>\n' +
+        '<script>JYTextAnimations.play("' + id + '", "#stage", "你的文字");<\/script>';
+      const done = function () {
+        btn.textContent = "已复制"; btn.classList.add("done");
+        setTimeout(function () { btn.textContent = "复制"; btn.classList.remove("done"); }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(snippet).then(done, done);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = snippet; document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); } catch (_) {}
+        document.body.removeChild(ta); done();
+      }
+    });
+
+    // counts (defensive — in case the library tallies differ from the static labels)
+    const byGroup = { "入场": 0, "出场": 0, "循环": 0 };
+    all.forEach(function (m) { if (byGroup[m.group] != null) byGroup[m.group]++; });
+    document.getElementById("n-all").textContent = all.length;
+    document.getElementById("n-in").textContent = byGroup["入场"];
+    document.getElementById("n-out").textContent = byGroup["出场"];
+    document.getElementById("n-loop").textContent = byGroup["循环"];
+    shownEl.textContent = all.length;
+  })();
+  </script>
+</body>
+</html>

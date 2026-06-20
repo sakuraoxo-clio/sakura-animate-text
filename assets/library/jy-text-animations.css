@@ -1,0 +1,18 @@
+.jyta-stage {
+  min-height: 108px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 8px;
+  background: radial-gradient(circle at 18% 18%, rgba(95, 222, 200, .18), transparent 35%), #101218;
+}
+.jyta-text,
+.jyta-char {
+  display: inline-block;
+  white-space: pre;
+  will-change: transform, opacity, filter, clip-path, text-shadow;
+}
+.jyta-text {
+  color: #fff8e9;
+  font: 760 28px/1.15 -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
